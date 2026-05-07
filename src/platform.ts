@@ -3,12 +3,12 @@ import mqtt, { MqttClient } from 'mqtt';
 
 import { PLUGIN_NAME, PLATFORM_NAME } from './settings.js';
 import { MqttGarageDoorAccessory } from './platformAccessory.js';
-import type { DoorConfig, PlatformConfig } from './types.js';
+import type { PlatformConfig } from './types.js';
 
 export class MqttGarageDoorPlatform implements DynamicPlatformPlugin {
   public readonly accessories: PlatformAccessory[] = [];
-public readonly Service: typeof Service;
-public readonly Characteristic: typeof Characteristic;
+  public readonly Service: API['hap']['Service'];
+  public readonly Characteristic: API['hap']['Characteristic'];
   public readonly client: MqttClient;
 
   private readonly cfg: PlatformConfig;
@@ -41,6 +41,7 @@ public readonly Characteristic: typeof Characteristic;
     this.client.on('connect', () => {
       this.log.info('Connected to MQTT broker');
       this.subscribeAll();
+
       for (const door of this.doorHandlers.values()) {
         door.refreshState();
       }
@@ -48,8 +49,10 @@ public readonly Characteristic: typeof Characteristic;
 
     this.client.on('reconnect', () => this.log.debug('Reconnecting to MQTT broker'));
     this.client.on('error', error => this.log.error('MQTT error:', error.message));
+
     this.client.on('message', (topic, payload) => {
       const message = payload.toString();
+
       for (const door of this.doorHandlers.values()) {
         door.handleMqttMessage(topic, message);
       }
@@ -69,6 +72,7 @@ public readonly Characteristic: typeof Characteristic;
     for (const doorConfig of doors) {
       const uuid = this.api.hap.uuid.generate(`${PLUGIN_NAME}:${doorConfig.name}`);
       activeUuids.add(uuid);
+
       const existing = this.accessories.find(accessory => accessory.UUID === uuid);
 
       if (existing) {
@@ -78,12 +82,14 @@ public readonly Characteristic: typeof Characteristic;
       } else {
         const accessory = new this.api.platformAccessory(doorConfig.name, uuid);
         accessory.context.device = doorConfig;
+
         this.doorHandlers.set(uuid, new MqttGarageDoorAccessory(this, accessory, doorConfig));
         this.api.registerPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, [accessory]);
       }
     }
 
     const stale = this.accessories.filter(accessory => !activeUuids.has(accessory.UUID));
+
     if (stale.length) {
       this.api.unregisterPlatformAccessories(PLUGIN_NAME, PLATFORM_NAME, stale);
     }
@@ -97,6 +103,7 @@ public readonly Characteristic: typeof Characteristic;
     }
 
     const topics = new Set<string>();
+
     for (const door of this.cfg.doors ?? []) {
       this.addTopic(topics, door.openGet);
       this.addTopic(topics, door.closedGet);
