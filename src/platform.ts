@@ -7,8 +7,8 @@ import type { DoorConfig, PlatformConfig } from './types.js';
 
 export class MqttGarageDoorPlatform implements DynamicPlatformPlugin {
   public readonly accessories: PlatformAccessory[] = [];
-  public readonly Service = this.api.hap.Service;
-  public readonly Characteristic = this.api.hap.Characteristic;
+public readonly Service: typeof Service;
+public readonly Characteristic: typeof Characteristic;
   public readonly client: MqttClient;
 
   private readonly cfg: PlatformConfig;
@@ -19,6 +19,8 @@ export class MqttGarageDoorPlatform implements DynamicPlatformPlugin {
     config: HbPlatformConfig,
     public readonly api: API,
   ) {
+    this.Service = this.api.hap.Service;
+    this.Characteristic = this.api.hap.Characteristic;
     this.cfg = config as unknown as PlatformConfig;
 
     if (!this.cfg?.url) {
