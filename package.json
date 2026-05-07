@@ -1,0 +1,45 @@
+{
+  "name": "homebridge-mqtt-garagedoor-v2",
+  "version": "2.0.0",
+  "description": "Modern Homebridge v2-ready MQTT garage door opener plugin",
+  "main": "./dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "lint": "eslint src --ext .ts",
+    "prepack": "npm run build"
+  },
+  "keywords": [
+    "homebridge-plugin",
+    "homebridge",
+    "mqtt",
+    "garage-door",
+    "homekit",
+    "matter"
+  ],
+  "engines": {
+    "node": ">=20.0.0",
+    "homebridge": ">=2.0.0"
+  },
+  "peerDependencies": {
+    "homebridge": ">=2.0.0"
+  },
+  "dependencies": {
+    "mqtt": "^5.10.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "eslint": "^9.17.0",
+    "typescript": "^5.7.2"
+  },
+  "license": "GPL-2.0-or-later",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YOUR_USERNAME/homebridge-mqtt-garagedoor-v2.git"
+  },
+  "bugs": {
+    "url": "https://github.com/YOUR_USERNAME/homebridge-mqtt-garagedoor-v2/issues"
+  },
+  "homepage": "https://github.com/YOUR_USERNAME/homebridge-mqtt-garagedoor-v2#readme"
+}

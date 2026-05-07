@@ -1,0 +1,42 @@
+{
+  "pluginAlias": "MQTTGarageDoorV2",
+  "pluginType": "platform",
+  "singular": false,
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": { "type": "string", "title": "Platform Name", "default": "MQTT Garage Door V2" },
+      "url": { "type": "string", "title": "MQTT Broker URL", "placeholder": "mqtt://192.168.1.10:1883" },
+      "username": { "type": "string", "title": "MQTT Username" },
+      "password": { "type": "string", "title": "MQTT Password" },
+      "rejectUnauthorized": { "type": "boolean", "title": "Reject Unauthorized TLS Certificates", "default": true },
+      "doors": {
+        "type": "array",
+        "title": "Garage Doors",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string", "title": "Door Name" },
+            "statusSet": { "type": "string", "title": "Command Topic" },
+            "commandPayload": { "type": "string", "title": "Command Payload", "default": "on" },
+            "openGet": { "type": "string", "title": "Open Status Topic" },
+            "openValue": { "type": "string", "title": "Open Payload", "default": "true" },
+            "closedGet": { "type": "string", "title": "Closed Status Topic" },
+            "closedValue": { "type": "string", "title": "Closed Payload", "default": "true" },
+            "openStatusCmdTopic": { "type": "string", "title": "Open Status Request Topic" },
+            "openStatusCmd": { "type": "string", "title": "Open Status Request Payload", "default": "" },
+            "closeStatusCmdTopic": { "type": "string", "title": "Closed Status Request Topic" },
+            "closeStatusCmd": { "type": "string", "title": "Closed Status Request Payload", "default": "" },
+            "lwt": { "type": "string", "title": "LWT Status Topic" },
+            "lwtPayload": { "type": "string", "title": "Offline Payload" },
+            "doorRunInSeconds": { "type": "number", "title": "Door Run Time", "default": 20 },
+            "pauseInSeconds": { "type": "number", "title": "Auto Close Delay" },
+            "showlog": { "type": "boolean", "title": "Verbose Logging", "default": false }
+          },
+          "required": ["name", "statusSet"]
+        }
+      }
+    },
+    "required": ["url", "doors"]
+  }
+}
